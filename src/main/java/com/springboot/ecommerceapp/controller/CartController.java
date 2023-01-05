@@ -24,15 +24,15 @@ public class CartController {
     private ProductRepository productRepository;
 
     @PostMapping("/add")
-    public ResponseEntity addToCart(@RequestBody CartItemRequestDto requestDto) {
+    public ResponseEntity addToCart(@RequestBody CartItemRequestDto requestDto, @RequestHeader("userId") Integer userId) {
+        requestDto.setUserId(userId);
         cartService.addToCart(requestDto);
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/")
-    public ResponseEntity<CartResponseDto> getCart(@RequestHeader("userId") String userId) {
-        Integer uid = Integer.parseInt(userId);
-        CartResponseDto cart = cartService.getCart(uid);
+    @GetMapping("/get")
+    public ResponseEntity<CartResponseDto> getCart(@RequestHeader("userId") Integer userId) {
+        CartResponseDto cart = cartService.getCart(userId);
         return ResponseEntity.ok(cart);
     }
 

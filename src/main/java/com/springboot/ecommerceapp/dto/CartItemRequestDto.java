@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import java.util.Date;
+
 @Data
 @NoArgsConstructor
 @ToString
@@ -20,6 +22,8 @@ public class CartItemRequestDto {
         item.setUserId(this.getUserId());
         item.setProductId(this.getProductId());
         item.setUserId(this.getUserId());
+        item.setQuantity(this.getQuantity());
+        item.setCreatedDate(new Date());
         return item;
     }
 }

@@ -17,13 +17,14 @@ public class CartItem {
 
     private Integer userId;
 
+    @Column(name = "product_id")
     private Integer productId;
 
     private Date createdDate;
 
-    @ManyToOne
-    @JoinColumn(name="product_id", referencedColumnName = "id", insertable = false, updatable = false)
-    private Product product;
+//    @ManyToOne
+//    @JoinColumn(name="product_id", referencedColumnName = "id", insertable = false, updatable = false)
+//    private Product product;
 
     private int quantity;
 

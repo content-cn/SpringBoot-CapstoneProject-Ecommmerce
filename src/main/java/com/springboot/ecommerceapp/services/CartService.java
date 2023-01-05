@@ -6,18 +6,24 @@ import com.springboot.ecommerceapp.dto.CartItemRequestDto;
 import com.springboot.ecommerceapp.exception.CartItemNotExistException;
 import com.springboot.ecommerceapp.models.CartItem;
 import com.springboot.ecommerceapp.models.Product;
+import com.springboot.ecommerceapp.models.User;
 import com.springboot.ecommerceapp.repositories.CartItemRepository;
+import com.springboot.ecommerceapp.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CartService {
 
     @Autowired
     private CartItemRepository cartRepository;
+
+    @Autowired
+    private ProductRepository productRepository;
 
     public void addToCart(CartItemRequestDto requestDto) {
         CartItem cart = requestDto.convertToCartItem();
@@ -29,7 +35,12 @@ public class CartService {
         List<CartItemResponseDto> cartItems = cartList.stream().map(c -> new CartItemResponseDto(c)).toList();
         double totalCost = 0;
         for(CartItemResponseDto dto: cartItems) {
-            totalCost += (dto.getProduct().getPrice()* dto.getQuantity());
+            Optional<Product> productOptional = productRepository.findById(dto.getProductId());
+            if (productOptional.isPresent()) {
+                dto.setPrice(productOptional.get().getPrice());
+                totalCost += (productOptional.get().getPrice()* dto.getQuantity());
+            }
+
         }
 
         return new CartResponseDto(cartItems, totalCost);
@@ -51,6 +62,10 @@ public class CartService {
         }
 
         cartRepository.deleteById(id);
+    }
+
+    public void deleteUserCartItems(Integer userId) {
+        cartRepository.deleteByUserId(userId);
     }
 
 }

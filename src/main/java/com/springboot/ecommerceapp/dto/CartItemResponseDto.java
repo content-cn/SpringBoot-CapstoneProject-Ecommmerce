@@ -13,19 +13,20 @@ public class CartItemResponseDto {
     private Integer id;
     private Integer userId;
     private Integer quantity;
-    private Product product;
+    private Integer productId;
+    private double price;
 
     public CartItemResponseDto(CartItem cart){
         this.setId(cart.getId());
         this.setUserId(cart.getUserId());
         this.setQuantity(cart.getQuantity());
-        this.setProduct(cart.getProduct());
+        this.setProductId(cart.getProductId());
     }
 
     public CartItem getCartFromDTO(CartItemResponseDto dto) {
         CartItem cart =  new CartItem();
         cart.setId(dto.getId());
-        cart.setProductId(dto.getProduct().getId());
+        cart.setProductId(dto.getProductId());
         cart.setQuantity(dto.getQuantity());
         cart.setUserId(dto.getUserId());
         return cart;
