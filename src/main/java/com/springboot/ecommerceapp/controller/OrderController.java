@@ -18,16 +18,19 @@ import java.util.List;
 @RequestMapping("/order")
 public class OrderController {
 
-    @Autowired
     private OrderService orderService;
 
-    @Autowired
     private UserService userService;
+
+    @Autowired
+    public OrderController(OrderService orderService, UserService userService) {
+        this.orderService = orderService;
+        this.userService =  userService;
+    }
 
     @PostMapping("/add")
     public ResponseEntity placeOrder(@RequestHeader("userId") Integer userId) throws UserNotFoundException {
         orderService.placeOrder(userId);
-
         return ResponseEntity.ok().build();
     }
 
