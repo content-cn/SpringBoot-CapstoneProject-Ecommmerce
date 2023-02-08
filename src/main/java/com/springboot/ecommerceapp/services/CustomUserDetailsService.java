@@ -22,11 +22,16 @@ import java.util.stream.Collectors;
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 
-    @Autowired
     private UserRepository userRepository;
 
+    private RoleMappingRepository roleMappingRepository;
+
     @Autowired
-    RoleMappingRepository roleMappingRepository;
+    public CustomUserDetailsService(UserRepository userRepository, RoleMappingRepository roleMappingRepository) {
+        super();
+        this.userRepository = userRepository;
+        this.roleMappingRepository = roleMappingRepository;
+    }
 
 
     public CustomUserDetailsService(UserRepository userRepository) {

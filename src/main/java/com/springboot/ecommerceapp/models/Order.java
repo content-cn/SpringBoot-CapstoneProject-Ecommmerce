@@ -26,13 +26,9 @@ public class Order {
 
     private String sessionId;
 
-//    @OneToMany(mappedBy = "order", fetch = FetchType.LAZY)
-//    private List<OrderItem> orderItems;
+    private String paymentMethod;
 
-//    @ManyToOne
-//    @JsonIgnore
-//    @JoinColumn(name = "user_id", referencedColumnName = "id")
-//    private User user;
+    private Integer addressId;
 
     private Integer userId;
 }

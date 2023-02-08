@@ -2,24 +2,22 @@ package com.springboot.ecommerceapp.controller;
 
 import com.springboot.ecommerceapp.exception.CategoryNotFoundException;
 import com.springboot.ecommerceapp.models.Category;
-import com.springboot.ecommerceapp.models.Product;
-import com.springboot.ecommerceapp.repositories.CategoryRepository;
 import com.springboot.ecommerceapp.services.CategoryService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/category")
 public class CategoryController {
 
+    private final CategoryService categoryService;
+
     @Autowired
-    private CategoryService categoryService;
+    public CategoryController(CategoryService categoryService) {
+        this.categoryService = categoryService;
+    }
 
     @GetMapping()
     public List<Category> getCategories() {
@@ -37,12 +35,15 @@ public class CategoryController {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCategory(@PathVariable(value = "id") Integer id) {
+    public void deleteCategory(
+        @PathVariable(value = "id") Integer id) {
         categoryService.removeCategory(id);
     }
 
     @PutMapping("/{id}")
-    public Category updateCategory(@PathVariable(value = "id") Integer id, @Validated @RequestBody Category category) {
+    public Category updateCategory(
+        @PathVariable(value = "id") Integer id,
+        @Validated @RequestBody Category category) {
         category.setId(id);
         return categoryService.addOrUpdateCategory(category);
     }

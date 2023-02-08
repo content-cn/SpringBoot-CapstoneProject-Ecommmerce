@@ -5,6 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.Date;
 
 @Data
@@ -12,8 +14,14 @@ import java.util.Date;
 @ToString
 public class CartItemRequestDto {
     private Integer id;
+
+    @NotNull(message = "Provide a valid userID")
     private Integer userId;
+
+    @NotNull(message = "Provide a valid productID")
     private Integer productId;
+
+    @NotNull(message = "Provide a valid quantity")
     private Integer quantity;
 
     public CartItem convertToCartItem() {

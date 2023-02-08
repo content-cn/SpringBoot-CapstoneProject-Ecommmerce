@@ -2,10 +2,7 @@ package com.springboot.ecommerceapp.services;
 
 import com.netflix.appinfo.InstanceInfo;
 import com.netflix.discovery.EurekaClient;
-import com.springboot.ecommerceapp.dto.CartItemResponseDto;
-import com.springboot.ecommerceapp.dto.CartResponseDto;
-import com.springboot.ecommerceapp.dto.OrderItemResponseDto;
-import com.springboot.ecommerceapp.dto.OrderResponseDto;
+import com.springboot.ecommerceapp.dto.*;
 import com.springboot.ecommerceapp.exception.OrderNotFoundException;
 import com.springboot.ecommerceapp.exception.UserNotFoundException;
 import com.springboot.ecommerceapp.models.*;
@@ -18,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -43,19 +41,24 @@ public class OrderService {
     @Autowired
     private EurekaClient discoveryClient;
 
+    @Autowired
+    private AddressService addressService;
+
 
 
     @Transactional
-    public void placeOrder(Integer userId) throws UserNotFoundException {
-        CartResponseDto cartResponseDto = cartService.getCart(userId);
+    public void placeOrder(OrderRequestDto orderRequestDto) throws UserNotFoundException {
+        CartResponseDto cartResponseDto = cartService.getCart(orderRequestDto.getUserId());
 
         List<CartItemResponseDto> cartItemResponseDtoList = cartResponseDto.getCartItems();
 
         // create the order and save it
         Order order = new Order();
         order.setCreatedDate(new Date());
-        order.setUserId(userId);
+        order.setUserId(orderRequestDto.getUserId());
         order.setTotalPrice(cartResponseDto.getTotalCost());
+        order.setAddressId(orderRequestDto.getAddressId());
+        order.setPaymentMethod(orderRequestDto.getPayment());
         final Order savedOrder = orderRepository.save(order);
 
         cartItemResponseDtoList.stream().forEach(cartItem -> {
@@ -72,9 +75,9 @@ public class OrderService {
             orderItemRepository.save(item);
         });
 
-        cartService.deleteUserCartItems(userId);
+        cartService.deleteUserCartItems(orderRequestDto.getUserId());
 
-        User user = userService.getUser(userId);
+        User user = userService.getUser(orderRequestDto.getUserId());
 
         String subject = "Order placed with order ID: " + order.getId();
 
@@ -100,8 +103,24 @@ public class OrderService {
         }
     }
 
-    public List<Order> listOrders(Integer userId) {
-        return orderRepository.findAllByUserIdOrderByCreatedDateDesc(userId);
+    public List<OrderResponseDto> listOrders(Integer userId) throws OrderNotFoundException {
+        List<Order> orders =  orderRepository.findAllByUserIdOrderByCreatedDateDesc(userId);
+
+        List<OrderResponseDto> orderResponseDtos = new ArrayList<>();
+
+        for (Order order: orders) {
+            OrderResponseDto orderResponseDto = getOrder(order.getId());
+            if(order.getAddressId() != null) {
+                Optional<Address> addressOptional = addressService.getAddress(order.getAddressId());
+                if (addressOptional.isPresent()) {
+                    orderResponseDto.setAddress(addressOptional.get());
+                }
+            }
+
+            orderResponseDtos.add(orderResponseDto);
+        }
+
+        return  orderResponseDtos;
     }
 
     public OrderResponseDto getOrder(Integer orderId) throws OrderNotFoundException {

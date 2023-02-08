@@ -15,6 +15,7 @@ public class CartItemResponseDto {
     private Integer quantity;
     private Integer productId;
     private double price;
+    private ProductDto product;
 
     public CartItemResponseDto(CartItem cart){
         this.setId(cart.getId());

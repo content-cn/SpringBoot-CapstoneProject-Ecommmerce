@@ -13,8 +13,12 @@ import java.util.Optional;
 @Service
 public class CategoryService {
 
+    private CategoryRepository categoryRepository;
+
     @Autowired
-    CategoryRepository categoryRepository;
+    public CategoryService(CategoryRepository categoryRepository) {
+        this.categoryRepository = categoryRepository;
+    }
 
 
     public Category addOrUpdateCategory(Category category) {
