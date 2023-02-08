@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.ws.rs.QueryParam;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -30,5 +31,10 @@ public class HomeController {
     @GetMapping()
     public Map<String, List<ProductDto>> getHomePage() {
         return homePageService.getHomePageProducts();
+    }
+
+    @GetMapping("/search")
+    public Map<String, List<ProductDto>> getHomePage(@QueryParam("pattern") String pattern) {
+        return homePageService.searchProducts(pattern);
     }
 }

@@ -42,6 +42,12 @@ public class ProductService {
         return list;
     }
 
+    public List<Product> getProductsByPattern(String pattern) {
+        List<Product> list = new ArrayList<>();
+        productRepository.findByNameContaining(pattern).forEach(list::add);
+        return list;
+    }
+
     public Optional<Product> getProductByName(String name) {
         return productRepository.findByName(name);
     }
