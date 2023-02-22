@@ -1,5 +1,6 @@
 package com.springboot.ecommerceapp.models;
 
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.util.Set;
         @UniqueConstraint(columnNames = {"email"})
 })
 @Data
+@NoArgsConstructor
 public class User {
 
     @Id
