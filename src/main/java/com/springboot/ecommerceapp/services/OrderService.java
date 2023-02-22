@@ -47,7 +47,7 @@ public class OrderService {
 
 
     @Transactional
-    public void placeOrder(OrderRequestDto orderRequestDto) throws UserNotFoundException {
+    public Order placeOrder(OrderRequestDto orderRequestDto) throws UserNotFoundException {
         CartResponseDto cartResponseDto = cartService.getCart(orderRequestDto.getUserId());
 
         List<CartItemResponseDto> cartItemResponseDtoList = cartResponseDto.getCartItems();
@@ -81,8 +81,11 @@ public class OrderService {
 
         String subject = "Order placed with order ID: " + order.getId();
 
-        sendEmail(user.getEmail(), subject);
+        if (user != null) {
+            sendEmail(user.getEmail(), subject);
+        }
 
+        return order;
     }
 
     private void sendEmail(String email, String subject) {

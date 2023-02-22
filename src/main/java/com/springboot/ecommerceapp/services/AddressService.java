@@ -32,8 +32,8 @@ public class AddressService {
         this.addressRepository = addressRepository;
     }
 
-    public void addAddress(Address address) {
-        addressRepository.save(address);
+    public Address addAddress(Address address) {
+        return addressRepository.save(address);
     }
 
    public List<Address> getAllAddressForUser(Integer userId) {

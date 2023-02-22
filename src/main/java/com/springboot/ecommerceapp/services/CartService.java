@@ -80,8 +80,8 @@ public class CartService {
         cartRepository.deleteById(id);
     }
 
-    public void deleteUserCartItems(Integer userId) {
-        cartRepository.deleteByUserId(userId);
+    public List<CartItem> deleteUserCartItems(Integer userId) {
+        return cartRepository.deleteByUserId(userId);
     }
 
 }
