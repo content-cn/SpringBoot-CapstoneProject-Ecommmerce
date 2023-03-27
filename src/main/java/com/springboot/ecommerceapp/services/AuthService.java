@@ -93,11 +93,14 @@ public class AuthService {
 
         user = userRepository.save(user);
 
-        Role roles = roleRepository.findByName(role).get();
-        RoleMapping roleMapping = new RoleMapping();
-        roleMapping.setUserId(user.getId());
-        roleMapping.setRoleId(roles.getId());
-        roleRepository.save(roles);
+        Optional<Role> optionalRole = roleRepository.findByName(role);
+        if (optionalRole.isPresent()) {
+            Role roles = optionalRole.get();
+            RoleMapping roleMapping = new RoleMapping();
+            roleMapping.setUserId(user.getId());
+            roleMapping.setRoleId(roles.getId());
+            roleRepository.save(roles);
+        }
 
         return new ResponseEntity<>("User registered successfully", HttpStatus.OK);
     }

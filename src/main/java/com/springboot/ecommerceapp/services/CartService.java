@@ -36,9 +36,9 @@ public class CartService {
         this.categoryService = categoryService;
     }
 
-    public void addToCart(CartItemRequestDto requestDto) {
+    public CartItem addToCart(CartItemRequestDto requestDto) {
         CartItem cart = requestDto.convertToCartItem();
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
     public CartResponseDto getCart(Integer userId) {
@@ -62,14 +62,14 @@ public class CartService {
         return new CartResponseDto(cartItems, totalCost);
     }
 
-    public void updateCartItem(CartItemRequestDto dto, int userId, Product product) {
+    public CartItem updateCartItem(CartItemRequestDto dto, int userId, Product product) {
         CartItem cart = dto.convertToCartItem();
         cart.setQuantity(dto.getQuantity());
         cart.setUserId(userId);
         cart.setId(dto.getId());
         cart.setProductId(product.getId());
         cart.setCreatedDate(new Date());
-        cartRepository.save(cart);
+        return cartRepository.save(cart);
     }
 
     public void deleteCartItem(int id, int userId) throws CartItemNotExistException {

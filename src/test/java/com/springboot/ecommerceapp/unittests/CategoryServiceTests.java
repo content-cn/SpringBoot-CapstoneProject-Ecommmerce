@@ -39,9 +39,9 @@ public class CategoryServiceTests {
     category.setName("Electronics");
   }
 
-  @DisplayName("Add a category of products")
+  @DisplayName("Add a category")
   @Test
-  public void add_user_address() throws UserNotFoundException {
+  public void addCategory() throws UserNotFoundException {
     given(categoryRepository.findById(category.getId()))
         .willReturn(Optional.empty());
 
